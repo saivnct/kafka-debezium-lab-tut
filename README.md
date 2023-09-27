@@ -1,5 +1,5 @@
 ## ***[Giangbb Studio]*** 
-# **Kafka Debezium CDC Labs**
+# **Kafka - Debezium CDC Labs**
 
 ## **Introduction to Debezium**
 
