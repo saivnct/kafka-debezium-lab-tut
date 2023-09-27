@@ -1,0 +1,20 @@
+{
+    "name": "mongo-src-connector",
+    "config": {
+        "connector.class" : "io.debezium.connector.mongodb.MongoDbConnector",
+        "tasks.max" : "1",
+        "topic.prefix" : "dbserver1",
+        "mongodb.connection.string" : "mongodb://mongodb1:27017/?replicaSet=rs1",
+        "mongodb.user" : "debezium",
+        "mongodb.password" : "dbz",
+        "mongodb.authsource": "admin",
+        "mongodb.ssl.enabled": false,
+        "database.include.list" : "inventory",
+        "capture.mode":"change_streams_update_full_with_pre_image",
+        "schema.history.internal.kafka.bootstrap.servers" : "kafka:9092",
+        "transforms": "route",
+        "transforms.route.type" : "org.apache.kafka.connect.transforms.RegexRouter",
+        "transforms.route.regex" : "(dbserver1)\\.(inventory)\\.([^.]+)",
+        "transforms.route.replacement" : "$3"
+    }
+}

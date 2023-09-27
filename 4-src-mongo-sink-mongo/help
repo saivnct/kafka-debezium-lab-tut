@@ -1,0 +1,3 @@
+mongodb://debezium:dbz@localhost:27017/inventory?tls=false&authSource=admin&replicaSet=rs1
+
+mongodb://debezium:dbz@localhost:27018/inventorybu?tls=false&authSource=admin&replicaSet=rs2

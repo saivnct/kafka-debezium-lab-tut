@@ -1,0 +1,476 @@
+{
+	"info": {
+		"_postman_id": "58ef668a-0a76-4f79-b356-4f79f13f90bc",
+		"name": "debezium",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5540804"
+	},
+	"item": [
+		{
+			"name": "1 - Kafka Connect - mysql",
+			"item": [
+				{
+					"name": "Get status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connectors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register connectors",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"inventory-connector\",\n    \"config\": {\n        \"connector.class\": \"io.debezium.connector.mysql.MySqlConnector\",\n        \"tasks.max\": \"1\",\n        \"database.hostname\": \"mysql\",\n        \"database.port\": \"3306\",\n        \"database.user\": \"debezium\",\n        \"database.password\": \"dbz\",\n        \"database.server.id\": \"184054\",\n        \"topic.prefix\": \"dbserver1\",\n        \"database.include.list\": \"inventory\",\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:9092\",\n        \"schema.history.internal.kafka.topic\": \"schemahistory.inventory\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connector's tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors/inventory-connector",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors",
+								"inventory-connector"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2 - Kafka Connect - mongodb",
+			"item": [
+				{
+					"name": "Get status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connectors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register connectors",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"inventory-connector\",\n    \"config\": {\n        \"connector.class\" : \"io.debezium.connector.mongodb.MongoDbConnector\",\n        \"tasks.max\" : \"1\",\n        \"mongodb.connection.string\" : \"mongodb://mongodb:27017/?replicaSet=rs0\",\n        \"topic.prefix\" : \"dbserver1\",\n        \"mongodb.user\" : \"debezium\",\n        \"mongodb.password\" : \"dbz\",\n        \"database.include.list\" : \"inventory\"\n    }\n}\n"
+						},
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connector's tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors/inventory-connector",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors",
+								"inventory-connector"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3 - Kafka Connect - src mongodb - sink postgres",
+			"item": [
+				{
+					"name": "Get status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connectors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register mongo src connector",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"mongo-src-connector\",\n    \"config\": {\n        \"connector.class\" : \"io.debezium.connector.mongodb.MongoDbConnector\",\n        \"tasks.max\" : \"1\",\n        \"topic.prefix\" : \"dbserver1\",\n        \"mongodb.connection.string\" : \"mongodb://mongodb:27017/?replicaSet=rs0\",\n        \"mongodb.user\" : \"debezium\",\n        \"mongodb.password\" : \"dbz\",\n        \"database.include.list\" : \"inventory\",\n        \"schema.history.internal.kafka.bootstrap.servers\" : \"kafka:9092\"\n    }\n}\n"
+						},
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register postgres sink connector",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"jdbc-sink\",\n    \"config\" : {\n        \"connector.class\" : \"io.confluent.connect.jdbc.JdbcSinkConnector\",\n        \"tasks.max\" : \"1\",\n        \"topics.regex\": \"dbserver1.inventory.([^.]+)\",\n        \"connection.url\" : \"jdbc:postgresql://postgres:5432/inventorydb?user=postgresuser&password=postgrespw\",\n        \"table.name.format\": \"${topic}\",\n        \"auto.create\" : \"true\",\n        \"auto.evolve\" : \"true\",\n        \"insert.mode\" : \"upsert\",\n        \"delete.enabled\": \"true\",\n        \"pk.fields\" : \"id\",\n        \"pk.mode\": \"record_key\",\n        \"transforms\": \"mongoflatten,route\",\n        \"transforms.mongoflatten.type\" : \"io.debezium.connector.mongodb.transforms.ExtractNewDocumentState\",\n        \"transforms.mongoflatten.drop.tombstones\": \"false\",\n        \"transforms.route.type\" : \"org.apache.kafka.connect.transforms.RegexRouter\",\n        \"transforms.route.regex\" : \"(dbserver1)\\\\.(inventory)\\\\.([^.]+)\",\n        \"transforms.route.replacement\" : \"$3\"\n    }\n}\n"
+						},
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete sink connector",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors/inventory-connector",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors",
+								"inventory-connector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connector's tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors/inventory-connector",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors",
+								"inventory-connector"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4 - Kafka Connect - src mongodb - sink mongodb",
+			"item": [
+				{
+					"name": "Get status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connectors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connector's tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors/mongo-src-connector",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors",
+								"mongo-src-connector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register mongo src connector",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"mongo-src-connector\",\n    \"config\": {\n        \"connector.class\" : \"io.debezium.connector.mongodb.MongoDbConnector\",\n        \"tasks.max\" : \"1\",\n        \"topic.prefix\" : \"dbserver1\",\n        \"mongodb.connection.string\" : \"mongodb://mongodb1:27017/?replicaSet=rs1\",\n        \"mongodb.user\" : \"debezium\",\n        \"mongodb.password\" : \"dbz\",\n        \"mongodb.authsource\": \"admin\",\n        \"mongodb.ssl.enabled\": false,\n        \"database.include.list\" : \"inventory\",\n        \"capture.mode\":\"change_streams_update_full_with_pre_image\",\n        \"schema.history.internal.kafka.bootstrap.servers\" : \"kafka:9092\",\n        \"transforms\": \"route\",\n        \"transforms.route.type\" : \"org.apache.kafka.connect.transforms.RegexRouter\",\n        \"transforms.route.regex\" : \"(dbserver1)\\\\.(inventory)\\\\.([^.]+)\",\n        \"transforms.route.replacement\" : \"$3\"\n    }\n}\n"
+						},
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register mongo sink connector",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"mongo-sink-connector\",\n    \"config\" : {\n        \"connector.class\": \"com.mongodb.kafka.connect.MongoSinkConnector\",\n        \"connection.uri\" : \"mongodb://debezium:dbz@mongodb2:27018/inventorybu?tls=false&authSource=admin&replicaSet=rs2\",\n        \"database\": \"inventorybu\",\n        \"topics\": \"customers,products,orders\",\n        \"change.data.capture.handler\":\"com.mongodb.kafka.connect.sink.cdc.debezium.mongodb.MongoDbHandler\"    \n    }\n}\n"
+						},
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete connector",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors/mongo-sink-connector",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors",
+								"mongo-sink-connector"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

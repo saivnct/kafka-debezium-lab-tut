@@ -1,0 +1,10 @@
+{
+    "name" : "mongo-sink-connector",
+    "config" : {
+        "connector.class": "com.mongodb.kafka.connect.MongoSinkConnector",
+        "connection.uri" : "mongodb://debezium:dbz@mongodb2:27018/inventorybu?tls=false&authSource=admin&replicaSet=rs2",
+        "database": "inventorybu",
+        "topics": "customers,products,orders",
+        "change.data.capture.handler":"com.mongodb.kafka.connect.sink.cdc.debezium.mongodb.MongoDbHandler"
+    }
+}

@@ -1,0 +1,5 @@
+.DS_Store
+.idea
+/mongodb1/
+/mongodb2/
+/kafka/

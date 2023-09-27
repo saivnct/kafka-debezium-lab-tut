@@ -1,0 +1,22 @@
+{
+    "name" : "jdbc-sink",
+    "config" : {
+        "connector.class" : "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "tasks.max" : "1",
+        "topics.regex": "dbserver1.inventory.([^.]+)",
+        "connection.url" : "jdbc:postgresql://postgres:5432/inventorydb?user=postgresuser&password=postgrespw",
+        "table.name.format": "${topic}",
+        "auto.create" : "true",
+        "auto.evolve" : "true",
+        "insert.mode" : "upsert",
+        "delete.enabled": "true",
+        "pk.fields" : "id",
+        "pk.mode": "record_key",
+        "transforms": "mongoflatten,route",
+        "transforms.mongoflatten.type" : "io.debezium.connector.mongodb.transforms.ExtractNewDocumentState",
+        "transforms.mongoflatten.drop.tombstones": "false",
+        "transforms.route.type" : "org.apache.kafka.connect.transforms.RegexRouter",
+        "transforms.route.regex" : "(dbserver1)\\.(inventory)\\.([^.]+)",
+        "transforms.route.replacement" : "$3"
+    }
+}
