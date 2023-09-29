@@ -9,7 +9,37 @@ We are using Docker Compose to deploy the following components:
 * Kafka
   * Kafka Broker
   * Kafka Connect with the [Debezium CDC](https://debezium.io/) and [JDBC sink](https://github.com/confluentinc/kafka-connect-jdbc) connectors as well as the Postgres JDBC driver
-* PostgreSQL
+* PostgresDB
+
+### Topology
+
+```
+                   +-------------+
+                   |             |
+                   |  MongoDB 5  |
+                   |             |
+                   +------+------+
+                          |
+                          |
+                          |
+          +---------------v------------------+
+          |                                  |
+          |           Kafka Connect          |
+          |    (Debezium, ES connectors)     |
+          |                                  |
+          +---------------+------------------+
+                          |
+                          |
+                          |
+                          |
+                  +-------v--------+
+                  |                |
+                  |    PostgresDB  |
+                  |                |
+                  +----------------+
+
+
+```
 
 ## Preparations - Option 1: Step by step setup
 

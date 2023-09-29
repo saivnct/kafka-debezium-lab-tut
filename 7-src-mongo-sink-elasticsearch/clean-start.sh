@@ -7,7 +7,7 @@ sudo rm -rf elastic
 
 docker-compose up -d
 
-sleep 3
+sleep 30
 
 # Initialize MongoDB replica set and insert some test data
 docker-compose exec mongodb bash -c '/usr/local/bin/init-inventory.sh'
@@ -15,10 +15,10 @@ docker-compose exec mongodb bash -c '/usr/local/bin/init-inventory.sh'
 sleep 3
 
 
-# Register JDBC sink connector
-curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @jdbc-sink.json
+# Start Elasticsearch sink connector
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @elastic-sink.json
 
-# Register Debezium MongoDB CDC connector
+# Start Debezium MongoDB CDC connector
 curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @mongodb-source.json
 
 

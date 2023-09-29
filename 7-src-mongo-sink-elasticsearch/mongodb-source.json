@@ -8,10 +8,6 @@
         "mongodb.user" : "debezium",
         "mongodb.password" : "dbz",
         "database.include.list" : "inventory",
-        "schema.history.internal.kafka.bootstrap.servers" : "kafka:9092",
-        "transforms": "route",
-        "transforms.route.type" : "org.apache.kafka.connect.transforms.RegexRouter",
-        "transforms.route.regex" : "(dbserver1)\\.(inventory)\\.([^.]+)",
-        "transforms.route.replacement" : "$3"
+        "schema.history.internal.kafka.bootstrap.servers" : "kafka:9092"
     }
 }

@@ -16,7 +16,7 @@ We are using Docker Compose to deploy the following components:
 ```
                    +-------------+
                    |             |
-                   |  MongoDB    |
+                   |  MongoDB 5  |
                    |             |
                    +------+------+
                           |
@@ -73,10 +73,10 @@ cd 7-src-mongo-sink-elasticsearch
 
 ```shell
 # listen for topic "dbserver1.inventory.customers"
-docker-compose exec kafka kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic customers --from-beginning --property print.key=true
+docker-compose exec kafka kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic dbserver1.inventory.customers --from-beginning --property print.key=true
 	
 # listen for topic "dbserver1.inventory.orders"
-docker-compose exec kafka kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic orders --from-beginning --property print.key=true
+docker-compose exec kafka kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic dbserver1.inventory.orders --from-beginning --property print.key=true
 ```
 
 
@@ -94,17 +94,82 @@ docker compose exec mongodb bash -c 'mongo -u debezium -p dbz --authenticationDa
 { "_id" : NumberLong(1004), "first_name" : "Anne", "last_name" : "Kretchmar", "email" : "annek@noanswer.org" }
 ```
 
-Verify that the PostgreSQL database has the same content:
+Verify that Elasticsearch has the same content:
 
 ```shell
-docker compose exec postgres bash -c 'psql -U postgresuser inventorydb -c "select * from customers"'
- last_name |  id  | first_name |         email
------------+------+------------+-----------------------
- Thomas    | 1001 | Sally      | sally.thomas@acme.com
- Bailey    | 1002 | George     | gbailey@foobar.com
- Walker    | 1003 | Edward     | ed@walker.com
- Kretchmar | 1004 | Anne       | annek@noanswer.org
-(4 rows)
+curl 'http://localhost:9200/customers/_search?pretty'
+
+{
+  "took" : 2,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 4,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "customers",
+        "_id" : "1001",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1001,
+          "first_name" : "Sally",
+          "last_name" : "Thomas",
+          "email" : "sally.thomas@acme.com",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      },
+      {
+        "_index" : "customers",
+        "_id" : "1002",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1002,
+          "first_name" : "George",
+          "last_name" : "Bailey",
+          "email" : "gbailey@foobar.com",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      },
+      {
+        "_index" : "customers",
+        "_id" : "1003",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1003,
+          "first_name" : "Edward",
+          "last_name" : "Walker",
+          "email" : "ed@walker.com",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      },
+      {
+        "_index" : "customers",
+        "_id" : "1004",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1004,
+          "first_name" : "Anne",
+          "last_name" : "Kretchmar",
+          "email" : "annek@noanswer.org",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      }
+    ]
+  }
+}
 ```
 
 ## Adding a new record
@@ -126,16 +191,26 @@ db.customers.insert([
 ...
 ```
 
-Verify that PostgreSQL contains the new record:
+Verify that Elasticsearch contains the new record:
 
 ```shell
-docker compose exec postgres bash -c 'psql -U postgresuser inventorydb -c "select * from customers"'
+curl 'http://localhost:9200/customers/_search?pretty'
 
- last_name |  id  | first_name |         email
------------+------+------------+-----------------------
 ...
-Hopper        | 1005 | Bob       | bob@example.com
-(5 rows)
+      {
+        "_index" : "customers",
+        "_id" : "1005",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1005,
+          "first_name" : "Bob",
+          "last_name" : "Hopper",
+          "email" : "bob@example.com",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      }
+...
 ```
 
 ## Updating a record
@@ -160,16 +235,26 @@ db.customers.update(
 );
 ```
 
-Verify that record in PostgreSQL is updated:
+Verify that record in Elasticsearch is updated:
 
 ```shell
-docker compose exec postgres bash -c 'psql -U postgresuser inventorydb -c "select * from customers"'
+curl 'http://localhost:9200/customers/_search?pretty'
 
- last_name |  id  | first_name |         email
------------+------+------------+-----------------------
 ...
- Hopper    | 1005 | Billy-Bob  | bob@example.com
-(5 rows)
+      {
+        "_index" : "customers",
+        "_id" : "1005",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1005,
+          "first_name" : "Billy-Bob",
+          "last_name" : "Hopper",
+          "email" : "bob@example.com",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      }
+...
 ```
 
 ## Record delete
@@ -187,15 +272,82 @@ db.customers.remove(
 );   
 ```
 
-Verify that record in PostgreSQL is deleted:
+Verify that record in Elasticsearch is deleted:
 
 ```shell
-docker compose exec postgres bash -c 'psql -U postgresuser inventorydb -c "select * from customers"'
+curl 'http://localhost:9200/customers/_search?pretty'
 
- last_name |  id  | first_name |         email
------------+------+------------+-----------------------
-...
-(4 rows)
+{
+  "took" : 2,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 4,
+      "relation" : "eq"
+    },
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "customers",
+        "_id" : "1001",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1001,
+          "first_name" : "Sally",
+          "last_name" : "Thomas",
+          "email" : "sally.thomas@acme.com",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      },
+      {
+        "_index" : "customers",
+        "_id" : "1002",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1002,
+          "first_name" : "George",
+          "last_name" : "Bailey",
+          "email" : "gbailey@foobar.com",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      },
+      {
+        "_index" : "customers",
+        "_id" : "1003",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1003,
+          "first_name" : "Edward",
+          "last_name" : "Walker",
+          "email" : "ed@walker.com",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      },
+      {
+        "_index" : "customers",
+        "_id" : "1004",
+        "_score" : 1.0,
+        "_source" : {
+          "id" : 1004,
+          "first_name" : "Anne",
+          "last_name" : "Kretchmar",
+          "email" : "annek@noanswer.org",
+          "__rs" : "rs0",
+          "__collection" : "customers"
+        }
+      }
+    ]
+  }
+}
 ```
 
 There should be no record of `Billy-Bob`.

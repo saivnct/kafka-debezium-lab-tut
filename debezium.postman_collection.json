@@ -1213,12 +1213,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{Elastic-Search-URL}}/customers/_mapping",
+									"raw": "{{Elastic-Search-URL}}/orders/_mapping",
 									"host": [
 										"{{Elastic-Search-URL}}"
 									],
 									"path": [
-										"customers",
+										"orders",
 										"_mapping"
 									]
 								}
@@ -1314,39 +1314,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"mongo-src-connector\",\n    \"config\": {\n        \"connector.class\" : \"io.debezium.connector.mongodb.MongoDbConnector\",\n        \"tasks.max\" : \"1\",\n        \"topic.prefix\" : \"dbserver2\",\n        \"mongodb.connection.string\" : \"mongodb://mongodb:27017/?replicaSet=rs0\",\n        \"mongodb.user\" : \"debezium\",\n        \"mongodb.password\" : \"dbz\",\n        \"database.include.list\" : \"inventory\",\n        \"schema.history.internal.kafka.bootstrap.servers\" : \"kafka:9092\",\n        \"capture.mode\":\"change_streams\"\n    }\n}\n"
-						},
-						"url": {
-							"raw": "{{Kafka-Connect-URL}}/connectors",
-							"host": [
-								"{{Kafka-Connect-URL}}"
-							],
-							"path": [
-								"connectors"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Register mongo src connector Copy",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"mongo-src-connector\",\n    \"config\": {\n        \"connector.class\" : \"io.debezium.connector.mongodb.MongoDbConnector\",\n        \"tasks.max\" : \"1\",\n        \"topic.prefix\" : \"dbserver1\",\n        \"mongodb.connection.string\" : \"mongodb://mongodb:27017/?replicaSet=rs0\",\n        \"mongodb.user\" : \"debezium\",\n        \"mongodb.password\" : \"dbz\",\n        \"database.include.list\" : \"inventory\",\n        \"schema.history.internal.kafka.bootstrap.servers\" : \"kafka:9092\",\n        \"transforms\": \"route\",\n        \"transforms.route.type\" : \"org.apache.kafka.connect.transforms.RegexRouter\",\n        \"transforms.route.regex\" : \"(dbserver1)\\\\.(inventory)\\\\.([^.]+)\",\n        \"transforms.route.replacement\" : \"$3\"\n    }\n}\n"
+							"raw": "{\n    \"name\": \"mongo-src-connector-1\",\n    \"config\": {\n        \"connector.class\" : \"io.debezium.connector.mongodb.MongoDbConnector\",\n        \"tasks.max\" : \"1\",\n        \"topic.prefix\" : \"dbserver1\",\n        \"mongodb.connection.string\" : \"mongodb://mongodb:27017/?replicaSet=rs0\",\n        \"mongodb.user\" : \"debezium\",\n        \"mongodb.password\" : \"dbz\",\n        \"database.include.list\" : \"inventory\",\n        \"schema.history.internal.kafka.bootstrap.servers\" : \"kafka:9092\"\n    }\n}\n"
 						},
 						"url": {
 							"raw": "{{Kafka-Connect-URL}}/connectors",
@@ -1378,7 +1346,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"elastic-sink-1\",\n    \"config\": {\n        \"connector.class\": \"io.confluent.connect.elasticsearch.ElasticsearchSinkConnector\",\n        \"tasks.max\": \"1\",\n        \"topics\": \"customers,geom,orders,products\",\n        \"connection.url\": \"http://elastic:9200\",\n        \"transforms\": \"unwrap,key\",\n        \"transforms.unwrap.type\": \"io.debezium.transforms.ExtractNewRecordState\",\n        \"transforms.unwrap.drop.tombstones\": \"false\",\n        \"transforms.unwrap.drop.deletes\": \"false\",\n        \"transforms.key.type\": \"org.apache.kafka.connect.transforms.ExtractField$Key\",\n        \"transforms.key.field\": \"id\",\n        \"key.ignore\": \"false\",\n        \"behavior.on.null.values\": \"delete\"\n    }\n}\n"
+							"raw": "{\n    \"name\": \"elastic-sink\",\n    \"config\": {\n        \"connector.class\": \"io.confluent.connect.elasticsearch.ElasticsearchSinkConnector\",\n        \"tasks.max\": \"1\",\n        \"topics.regex\": \"dbserver1.inventory.([^.]+)\",\n        \"connection.url\": \"http://elastic:9200\",\n        \"transforms\": \"unwrap,RenameField,key,route\",\n        \"transforms.unwrap.type\": \"io.debezium.connector.mongodb.transforms.ExtractNewDocumentState\",\n        \"transforms.unwrap.drop.tombstones\": \"false\",\n        \"transforms.unwrap.drop.deletes\": \"false\",\n        \"transforms.unwrap.add.fields\":\"rs,collection\",\n        \"transforms.RenameField.type\": \"org.apache.kafka.connect.transforms.ReplaceField$Value\",\n        \"transforms.RenameField.renames\": \"_id:id\",\n        \"transforms.key.type\": \"org.apache.kafka.connect.transforms.ExtractField$Key\",\n        \"transforms.key.field\": \"id\",\n        \"transforms.route.type\" : \"org.apache.kafka.connect.transforms.RegexRouter\",\n        \"transforms.route.regex\" : \"(dbserver1)\\\\.(inventory)\\\\.([^.]+)\",\n        \"transforms.route.replacement\" : \"$3\",\n        \"type.name\": \"collection\",\n        \"key.ignore\": \"false\",\n        \"behavior.on.null.values\": \"delete\"\n    }\n}\n"
 						},
 						"url": {
 							"raw": "{{Kafka-Connect-URL}}/connectors",
@@ -1409,13 +1377,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{Kafka-Connect-URL}}/connectors/inventory-connector",
+							"raw": "{{Kafka-Connect-URL}}/connectors/mongo-src-connector",
 							"host": [
 								"{{Kafka-Connect-URL}}"
 							],
 							"path": [
 								"connectors",
-								"inventory-connector"
+								"mongo-src-connector"
 							]
 						}
 					},

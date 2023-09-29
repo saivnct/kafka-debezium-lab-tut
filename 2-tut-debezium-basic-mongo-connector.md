@@ -9,6 +9,29 @@ We are using Docker Compose to deploy the following components:
   * Kafka Broker
   * Kafka Connect with the [Debezium CDC](https://debezium.io/) connector
 
+
+### Topology
+
+```
+                   +-------------+
+                   |             |
+                   |  MongoDB 5  |
+                   |             |
+                   +------+------+
+                          |
+                          |
+                          |
+          +---------------v------------------+
+          |                                  |
+          |           Kafka Connect          |
+          |    (Debezium, ES connectors)     |
+          |                                  |
+          +---------------+------------------+
+
+
+
+```
+
 ## Preparations - Option 1: Step by step setup
 
 ```shell
@@ -28,7 +51,7 @@ curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json"
 
 ## Preparations - Option 2: All in one setup
 ```shell
-cd 3-src-mongo-sink-postgres
+cd 2-basic-mongo-connector
 
 ./clean-start.sh
 ```

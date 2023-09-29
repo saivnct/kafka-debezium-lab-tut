@@ -15,3 +15,4 @@ Debezium is built on top of Apache Kafka and provides a set of Kafka Connect com
 4. [Debezium CDC MongoDB - MongoDB warehouse demo](4-tut-debezium-src-mongo-sink-mongo.md)
 5. [Debezium CDC Unwrap MySQL SMT - Elasticsearch sink connector demo](5-tut-debezium-src-mysql-sink-elasticsearch.md)
 6. [Debezium CDC Unwrap Postgres SMT  - Elasticsearch sink connector demo](6-tut-debezium-src-postgres-sink-elasticsearch.md)
+7. [Debezium CDC Unwrap MongoDB SMT  - Elasticsearch sink connector demo](7-tut-debezium-src-mongo-sink-elasticsearch.md)

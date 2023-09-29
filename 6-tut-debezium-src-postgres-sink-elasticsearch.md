@@ -85,7 +85,7 @@ docker-compose exec kafka kafka-console-consumer.sh --bootstrap-server kafka:909
 
 ## Verify initial sync
 
-Check contents of the Postgre database:
+Check contents of the Postgres database:
 
 ```shell
 docker compose exec postgres bash -c 'psql -U postgres postgres'
@@ -173,7 +173,7 @@ curl 'http://localhost:9200/customers/_search?pretty'
 
 ## Adding a new record
 
-Insert a new record into MySQL:
+Insert a new record into Postgres:
 
 ```shell
 docker compose exec postgres bash -c 'psql -U postgres postgres'
@@ -205,7 +205,7 @@ curl 'http://localhost:9200/customers/_search?pretty'
 
 ## Updating a record
 
-Update a record in MySQL:
+Update a record in Postgres:
 
 ```shell
 docker compose exec postgres bash -c 'psql -U postgres postgres'
@@ -215,7 +215,7 @@ UPDATE 1
 
 ```
 
-Verify that record inElasticsearch is updated:
+Verify that record in Elasticsearch is updated:
 
 ```shell
 curl 'http://localhost:9200/customers/_search?pretty'

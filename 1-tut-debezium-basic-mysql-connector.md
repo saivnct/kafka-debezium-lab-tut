@@ -9,6 +9,27 @@ We are using Docker to deploy the following components:
     * Kafka Broker
     * Kafka Connect with the [Debezium CDC](https://debezium.io/) connector
 
+### Topology
+
+```
+                   +-------------+
+                   |             |
+                   |    Mysql    |
+                   |             |
+                   +------+------+
+                          |
+                          |
+                          |
+          +---------------v------------------+
+          |                                  |
+          |           Kafka Connect          |
+          |    (Debezium, ES connectors)     |
+          |                                  |
+          +---------------+------------------+
+
+
+
+```
 
 ## Preparations
 

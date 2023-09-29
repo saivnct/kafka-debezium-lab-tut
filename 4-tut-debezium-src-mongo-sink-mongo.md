@@ -11,6 +11,36 @@ We are using Docker Compose to deploy the following components:
   * Kafka Connect with the [Debezium CDC](https://debezium.io/) and [Mongo-Kafka sink](https://github.com/mongodb/mongo-kafka) connectors
 
 
+### Topology
+
+```
+                   +-------------+
+                   |             |
+                   |  MongoDB 5  |
+                   |             |
+                   +------+------+
+                          |
+                          |
+                          |
+          +---------------v------------------+
+          |                                  |
+          |           Kafka Connect          |
+          |    (Debezium, ES connectors)     |
+          |                                  |
+          +---------------+------------------+
+                          |
+                          |
+                          |
+                          |
+                  +-------v--------+
+                  |                |
+                  |    MongoDB 5   |
+                  |                |
+                  +----------------+
+
+
+```
+
 ## Preparations - Option 1: Step by step setup
 
 ```shell
