@@ -24,10 +24,10 @@ cd 3-src-mongo-sink-postgres
 docker compose exec mongodb bash -c '/usr/local/bin/init-inventory.sh'
 
 # Start JDBC sink connector
-curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://$CURRENT_HOST:8083/connectors/ -d @jdbc-sink.json
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @jdbc-sink.json
 
 # Start Debezium MongoDB CDC connector
-curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://$CURRENT_HOST:8083/connectors/ -d @mongodb-source.json
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @mongodb-source.json
 
 ```
 
@@ -140,6 +140,9 @@ docker compose exec postgres bash -c 'psql -U postgresuser inventorydb -c "selec
  Hopper    | 1005 | Billy-Bob  | bob@example.com
 (5 rows)
 ```
+
+## Record delete
+delete a record in MongoDB:
 
 ```shell
 docker compose exec mongodb bash -c 'mongo -u debezium -p dbz --authenticationDatabase admin inventory'

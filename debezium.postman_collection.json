@@ -471,6 +471,329 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "5 - Kafka Connect - src mysql - sink elasticsearch",
+			"item": [
+				{
+					"name": "elastic",
+					"item": [
+						{
+							"name": "check service info",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "{{ELASTIC_USERNAME}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "{{ELASTIC_PASSWORD}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Elastic-Search-URL}}",
+									"host": [
+										"{{Elastic-Search-URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "check index content",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ELASTIC_PASSWORD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ELASTIC_USERNAME}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Elastic-Search-URL}}/customers/_search?pretty",
+									"host": [
+										"{{Elastic-Search-URL}}"
+									],
+									"path": [
+										"customers",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "pretty",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "check index mapping",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ELASTIC_PASSWORD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ELASTIC_USERNAME}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Elastic-Search-URL}}/customers/_mapping",
+									"host": [
+										"{{Elastic-Search-URL}}"
+									],
+									"path": [
+										"customers",
+										"_mapping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete index",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ELASTIC_PASSWORD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ELASTIC_USERNAME}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{Elastic-Search-URL}}/addresses",
+									"host": [
+										"{{Elastic-Search-URL}}"
+									],
+									"path": [
+										"addresses"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connectors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register mysql src connector",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"inventory-connector\",\n    \"config\": {\n        \"connector.class\": \"io.debezium.connector.mysql.MySqlConnector\",\n        \"tasks.max\": \"1\",\n        \"topic.prefix\": \"dbserver1\",\n        \"database.hostname\": \"mysql\",\n        \"database.port\": \"3306\",\n        \"database.user\": \"debezium\",\n        \"database.password\": \"dbz\",\n        \"database.server.id\": \"184054\",\n        \"database.include.list\": \"inventory\",\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:9092\",\n        \"schema.history.internal.kafka.topic\": \"schema-changes.inventory\",\n        \"transforms\": \"route\",\n        \"transforms.route.type\": \"org.apache.kafka.connect.transforms.RegexRouter\",\n        \"transforms.route.regex\": \"([^.]+)\\\\.([^.]+)\\\\.([^.]+)\",\n        \"transforms.route.replacement\": \"$3\"\n    }\n}\n"
+						},
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register elasticsearch sink connector for key id",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"elastic-sink-1\",\n    \"config\": {\n        \"connector.class\": \"io.confluent.connect.elasticsearch.ElasticsearchSinkConnector\",\n        \"tasks.max\": \"1\",\n        \"topics\": \"customers,addresses,geom,products\",\n        \"connection.url\": \"http://elastic:9200\",\n        \"transforms\": \"unwrap,key\",\n        \"transforms.unwrap.type\": \"io.debezium.transforms.ExtractNewRecordState\",\n        \"transforms.unwrap.drop.tombstones\": \"false\",\n        \"transforms.unwrap.drop.deletes\": \"false\",\n        \"transforms.key.type\": \"org.apache.kafka.connect.transforms.ExtractField$Key\",\n        \"transforms.key.field\": \"id\",\n        \"key.ignore\": \"false\",\n        \"behavior.on.null.values\": \"delete\"\n    }\n}\n"
+						},
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register elasticsearch sink connector for key order_number",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"elastic-sink-orders\",\n    \"config\": {\n        \"connector.class\": \"io.confluent.connect.elasticsearch.ElasticsearchSinkConnector\",\n        \"tasks.max\": \"1\",\n        \"topics\": \"orders\",\n        \"connection.url\": \"http://elastic:9200\",\n        \"transforms\": \"unwrap,key\",\n        \"transforms.unwrap.type\": \"io.debezium.transforms.ExtractNewRecordState\",\n        \"transforms.unwrap.drop.tombstones\": \"false\",\n        \"transforms.unwrap.drop.deletes\": \"false\",\n        \"transforms.key.type\": \"org.apache.kafka.connect.transforms.ExtractField$Key\",\n        \"transforms.key.field\": \"order_number\",\n        \"key.ignore\": \"false\",\n        \"behavior.on.null.values\": \"delete\"\n    }\n}\n"
+						},
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete sink connector",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors/elastic-sink",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors",
+								"elastic-sink"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connector's tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Kafka-Connect-URL}}/connectors/inventory-connector",
+							"host": [
+								"{{Kafka-Connect-URL}}"
+							],
+							"path": [
+								"connectors",
+								"inventory-connector"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
