@@ -4,7 +4,7 @@ This example shows how to capture events from a MongoDB database
 
 We are using Docker Compose to deploy the following components:
 
-* MongoDB
+* MongoDB 5
 * Kafka
   * Kafka Broker
   * Kafka Connect with the [Debezium CDC](https://debezium.io/) connector

@@ -5,7 +5,7 @@ In order to convert the CDC events ebitted by Debezium's MongoDB connector into 
 
 We are using Docker Compose to deploy the following components:
 
-* MongoDB
+* MongoDB 5
 * Kafka
   * Kafka Broker
   * Kafka Connect with the [Debezium CDC](https://debezium.io/) and [JDBC sink](https://github.com/confluentinc/kafka-connect-jdbc) connectors as well as the Postgres JDBC driver

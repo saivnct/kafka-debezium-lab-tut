@@ -10,7 +10,7 @@
         "mongodb.authsource": "admin",
         "mongodb.ssl.enabled": false,
         "database.include.list" : "inventory",
-        "capture.mode":"change_streams_update_full_with_pre_image",
+        "capture.mode":"change_streams",
         "schema.history.internal.kafka.bootstrap.servers" : "kafka:9092",
         "transforms": "route",
         "transforms.route.type" : "org.apache.kafka.connect.transforms.RegexRouter",

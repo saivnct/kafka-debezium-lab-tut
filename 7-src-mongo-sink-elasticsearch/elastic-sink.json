@@ -1,0 +1,18 @@
+{
+    "name": "elastic-sink",
+    "config": {
+        "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+        "tasks.max": "1",
+        "topics": "customers",
+        "connection.url": "http://elastic:9200",
+        "transforms": "unwrap,key",
+        "transforms.unwrap.type": "io.debezium.connector.mongodb.transforms.ExtractNewDocumentState",
+        "transforms.unwrap.drop.tombstones": "false",
+        "transforms.unwrap.drop.deletes": "false",
+        "transforms.key.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+        "transforms.key.field": "id",
+        "type.name": "collection",
+        "key.ignore": "false",
+        "behavior.on.null.values": "delete"
+    }
+}
