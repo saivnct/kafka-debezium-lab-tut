@@ -53,7 +53,7 @@ cd 5-src-mysql-sink-elasticsearch
 # Start the application
 ./start.sh
 
-# Start Elasticsearch sink connector for topic "customers,addresses,geom,products" (these topic has key named 'id')
+# Start Elasticsearch sink connector for topics "customers,addresses,geom,products" (these topics has key named 'id')
 curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @elastic-sink-1.json
 
 # Start Elasticsearch sink connector for topic "orders" (this topic has key named 'order_number')

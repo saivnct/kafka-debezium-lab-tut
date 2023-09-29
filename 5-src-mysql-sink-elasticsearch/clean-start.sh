@@ -7,6 +7,7 @@ sudo rm -rf elastic
 
 docker-compose up -d
 
+sleep 30
 
 # Start Elasticsearch sink connector for topic "customers,addresses,geom,products" (these topic has key named 'id')
 curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @elastic-sink-1.json

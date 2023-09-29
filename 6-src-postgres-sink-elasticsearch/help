@@ -1,0 +1,18 @@
+docker compose exec postgres bash
+
+psql -U postgres postgres
+
+- check postgres version
+	SELECT VERSION();
+
+- list db:
+	\l
+
+
+- Show tables in PostgreSQL
+	CI:
+		\c database_name
+		\dt
+
+	CII:
+		select * from inventory.customers;
