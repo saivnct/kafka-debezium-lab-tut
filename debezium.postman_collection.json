@@ -262,7 +262,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\" : \"jdbc-sink\",\n    \"config\" : {\n        \"connector.class\" : \"io.confluent.connect.jdbc.JdbcSinkConnector\",\n        \"tasks.max\" : \"1\",\n        \"topics.regex\": \"dbserver1.inventory.([^.]+)\",\n        \"connection.url\" : \"jdbc:postgresql://postgres:5432/inventorydb?user=postgresuser&password=postgrespw\",\n        \"table.name.format\": \"${topic}\",\n        \"auto.create\" : \"true\",\n        \"auto.evolve\" : \"true\",\n        \"insert.mode\" : \"upsert\",\n        \"delete.enabled\": \"true\",\n        \"pk.fields\" : \"id\",\n        \"pk.mode\": \"record_key\",\n        \"transforms\": \"mongoflatten,route\",\n        \"transforms.mongoflatten.type\" : \"io.debezium.connector.mongodb.transforms.ExtractNewDocumentState\",\n        \"transforms.mongoflatten.drop.tombstones\": \"false\",\n        \"transforms.route.type\" : \"org.apache.kafka.connect.transforms.RegexRouter\",\n        \"transforms.route.regex\" : \"(dbserver1)\\\\.(inventory)\\\\.([^.]+)\",\n        \"transforms.route.replacement\" : \"$3\"\n    }\n}\n"
+							"raw": "{\n    \"name\" : \"jdbc-sink\",\n    \"config\" : {\n        \"connector.class\" : \"io.confluent.connect.jdbc.JdbcSinkConnector\",\n        \"tasks.max\" : \"1\",\n        \"topics.regex\": \"dbserver1.inventory.([^.]+)\",\n        \"connection.url\" : \"jdbc:postgresql://postgres:5432/postgres?user=postgres&password=postgres\",\n        \"table.name.format\": \"${topic}\",\n        \"auto.create\" : \"true\",\n        \"auto.evolve\" : \"true\",\n        \"insert.mode\" : \"upsert\",\n        \"delete.enabled\": \"true\",\n        \"pk.fields\" : \"id\",\n        \"pk.mode\": \"record_key\",\n        \"transforms\": \"mongoflatten,route\",\n        \"transforms.mongoflatten.type\" : \"io.debezium.connector.mongodb.transforms.ExtractNewDocumentState\",\n        \"transforms.mongoflatten.drop.tombstones\": \"false\",\n        \"transforms.route.type\" : \"org.apache.kafka.connect.transforms.RegexRouter\",\n        \"transforms.route.regex\" : \"(dbserver1)\\\\.(inventory)\\\\.([^.]+)\",\n        \"transforms.route.replacement\" : \"$3\"\n    }\n}\n"
 						},
 						"url": {
 							"raw": "{{Kafka-Connect-URL}}/connectors",
@@ -851,12 +851,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{Elastic-Search-URL}}/customers/_search?pretty",
+									"raw": "{{Elastic-Search-URL}}/orders/_search?pretty",
 									"host": [
 										"{{Elastic-Search-URL}}"
 									],
 									"path": [
-										"customers",
+										"orders",
 										"_search"
 									],
 									"query": [
@@ -991,7 +991,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"inventory-connector\",\n    \"config\": {\n        \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\n        \"tasks.max\": \"1\",\n        \"database.hostname\": \"postgres\",\n        \"database.port\": \"5432\",\n        \"database.user\": \"postgres\",\n        \"database.password\": \"postgres\",\n        \"database.dbname\" : \"postgres\",\n        \"topic.prefix\": \"dbserver1\",\n        \"schema.include.list\": \"inventory\",\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:9092\",\n        \"schema.history.internal.kafka.topic\": \"schema-changes.inventory\",\n        \"transforms\": \"route\",\n        \"transforms.route.type\": \"org.apache.kafka.connect.transforms.RegexRouter\",\n        \"transforms.route.regex\": \"([^.]+)\\\\.([^.]+)\\\\.([^.]+)\",\n        \"transforms.route.replacement\": \"$3\"\n    }\n}\n"
+							"raw": "{\n    \"name\": \"inventory-connector\",\n    \"config\": {\n        \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\n        \"tasks.max\": \"1\",\n        \"database.hostname\": \"postgres\",\n        \"database.port\": \"5432\",\n        \"database.user\": \"postgres\",\n        \"database.password\": \"postgres\",\n        \"database.dbname\" : \"postgres\",\n        \"topic.prefix\": \"dbserver1\",\n        \"schema.include.list\": \"inventory\",\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:9092\",\n        \"schema.history.internal.kafka.topic\": \"schema-changes.inventory\",\n        \"transforms\": \"route\",\n        \"transforms.route.type\": \"org.apache.kafka.connect.transforms.RegexRouter\",\n        \"transforms.route.regex\": \"([^.]+)\\\\.([^.]+)\\\\.([^.]+)\",\n        \"transforms.route.replacement\": \"$3\",\n        \"transforms.route.key.field.name\": \"id\",\n        \"transforms.route.key.enforce.uniqueness\":\"false\"\n    }\n}\n"
 						},
 						"url": {
 							"raw": "{{Kafka-Connect-URL}}/connectors",

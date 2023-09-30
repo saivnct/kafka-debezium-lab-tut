@@ -23,10 +23,10 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
 
   mongodb:
+    image: giangbb/mongodb-relp:1.0
     build:
-      context: mongodb-docker
+      context: ../mongodb-docker
       dockerfile: Dockerfile
-#    image: giangbb/mongodb:1.0
     restart: always
     hostname: mongodb
     ports:
@@ -75,9 +75,9 @@ services:
       retries: 120
 
   connect:
-    image: debezium/connect-jdbc-es:${DEBEZIUM_VERSION}
+    image: giangbb/connect-es:${DEBEZIUM_VERSION}
     build:
-      context: debezium-jdbc-es
+      context: ../kafka-connect-es
       args:
         DEBEZIUM_VERSION: ${DEBEZIUM_VERSION}
     ports:

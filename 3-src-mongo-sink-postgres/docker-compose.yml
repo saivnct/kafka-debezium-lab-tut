@@ -23,10 +23,10 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
 
   mongodb:
+    image: giangbb/mongodb-relp:1.0
     build:
-      context: mongodb-docker
+      context: ../mongodb-docker
       dockerfile: Dockerfile
-#    image: giangbb/mongodb:1.0
     restart: always
     hostname: mongodb
     ports:
@@ -43,9 +43,9 @@ services:
   postgres:
     image: postgres
     environment:
-      POSTGRES_USER: postgresuser
-      POSTGRES_PASSWORD: postgrespw
-      POSTGRES_DB: inventorydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
       PGDATA: /data/postgres
     volumes:
        - ./postgres:/data/postgres
@@ -55,9 +55,9 @@ services:
       - cdc-network
 
   connect:
-    image: debezium/connect-jdbc:${DEBEZIUM_VERSION}
+    image: giangbb/connect-postgres-jdbc:${DEBEZIUM_VERSION}
     build:
-      context: debezium-jdbc
+      context: ../kafka-connect-postgres-jdbc
       args:
         DEBEZIUM_VERSION: ${DEBEZIUM_VERSION}
     ports:

@@ -23,10 +23,10 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
 
   mongodb:
+    image: giangbb/mongodb-relp:1.0
     build:
-      context: .
+      context: ../mongodb-docker
       dockerfile: Dockerfile
-#    image: giangbb/mongodb:1.0
     restart: always
     hostname: mongodb
     ports:

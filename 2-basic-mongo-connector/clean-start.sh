@@ -6,7 +6,7 @@ sudo rm -rf kafka
 
 docker-compose up -d
 
-sleep 3
+sleep 30
 
 # Initialize MongoDB replica set and insert some test data
 docker-compose exec mongodb bash -c '/usr/local/bin/init-inventory.sh'
